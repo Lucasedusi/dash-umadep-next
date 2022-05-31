@@ -18,7 +18,7 @@ export function Header() {
 			align="center"
 		>
 			<Text fontSize="3xl" fontWeight="bold" letterSpacing="tight" w="64">
-				Dashdog
+				Dashgo
 				<Text as="span" ml="1" color="pink.500">
 					.
 				</Text>
