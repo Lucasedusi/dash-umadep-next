@@ -56,8 +56,7 @@ export default function UserList() {
 									<Checkbox colorScheme="pink" />
 								</Th>
 								<Th>Usuário</Th>
-								<Th>Data de Cadastro</Th>
-								<Th width="8"></Th>
+								{isWideVersion && <Th>Data de Cadastro</Th>}
 							</Tr>
 						</Thead>
 						<Tbody>
