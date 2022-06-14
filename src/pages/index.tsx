@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { Input } from "../components/Form/Input";
+import Router from "next/router";
 
 type SignInFormData = {
 	emai: string;
@@ -26,6 +27,7 @@ export default function SignIn() {
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 
 		console.log(values);
+		Router.push("/dashboard");
 	};
 
 	return (

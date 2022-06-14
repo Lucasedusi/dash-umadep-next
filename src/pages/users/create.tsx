@@ -16,36 +16,65 @@ import { SideBar } from "../../components/SideBar";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { api } from "../../services/api";
+import { useState } from "react";
+import Router from "next/router";
 
 type CreateUserFormData = {
 	name: string;
 	email: string;
 	password: string;
-	password_confimation: string;
 };
 
 const signInFormSchema = yup.object().shape({
 	name: yup.string().required("Nome Obrigatório"),
 	email: yup.string().required("E-mail Obrigatório").email("E-mail Inválido"),
 	password: yup.string().required("Senha Obrigatória").min(6, "Tamanho Mínimo"),
-	password_confimation: yup
-		.string()
-		.oneOf([null, yup.ref("password")], "Precisam ser iguais"),
 });
 
-export default function UserCreaete() {
+export default function UserCreate() {
+	const [users, setUsers] = useState({
+		name: "",
+		email: "",
+		password: "",
+	});
+
 	const { register, handleSubmit, formState } = useForm({
 		resolver: yupResolver(signInFormSchema),
 	});
 
 	const { errors } = formState;
 
-	const handleUserCreate: SubmitHandler<CreateUserFormData> = async (
-		values
-	) => {
-		await new Promise((resolve) => setTimeout(resolve, 2000));
+	const handleChangeUsers = (e) => {
+		const value = e.target.value;
 
-		console.log(values);
+		setUsers({
+			...users,
+			[e.target.name]: value,
+		});
+	};
+
+	const handleUserCreate = async ({
+		name,
+		email,
+		password,
+	}: CreateUserFormData) => {
+		const userData = {
+			name: name,
+			email: email,
+			password: password,
+		};
+
+		await api
+			.post("users", userData)
+			.then((response) => {
+				console.log(response.data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
+		Router.push("/users");
 	};
 
 	return (
@@ -75,6 +104,7 @@ export default function UserCreaete() {
 								name="name"
 								type="name"
 								label="Nome Completo"
+								onChange={handleChangeUsers}
 								error={errors.name}
 								{...register("name")}
 							/>
@@ -82,6 +112,7 @@ export default function UserCreaete() {
 								name="email"
 								type="email"
 								label="E-mail"
+								onChange={handleChangeUsers}
 								error={errors.email}
 								{...register("email")}
 							/>
@@ -91,15 +122,9 @@ export default function UserCreaete() {
 								name="password"
 								type="password"
 								label="Senha"
+								onChange={handleChangeUsers}
 								error={errors.password}
 								{...register("password")}
-							/>
-							<Input
-								name="password_confirmation"
-								type="password"
-								label="Confirmar Senha"
-								error={errors.password_confimation}
-								{...register("password_confimation")}
 							/>
 						</SimpleGrid>
 					</VStack>
@@ -123,4 +148,7 @@ export default function UserCreaete() {
 			</Flex>
 		</Box>
 	);
+}
+function useHistory() {
+	throw new Error("Function not implemented.");
 }

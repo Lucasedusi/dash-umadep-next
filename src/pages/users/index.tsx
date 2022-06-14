@@ -36,11 +36,11 @@ export default function UserList() {
 		lg: true,
 	});
 
-	async function handlePrefetchUser(userId: string) {
+	async function handlePrefetchUser(id: string) {
 		await queryClient.prefetchQuery(
-			["user", userId],
+			["user", id],
 			async () => {
-				const response = await api.get(`users/${userId}`);
+				const response = await api.get(`users/${id}`);
 
 				return response.data;
 			},
@@ -86,33 +86,24 @@ export default function UserList() {
 						</Flex>
 					) : error ? (
 						<Flex justify="center">
-							<Text>Falha ao</Text>
+							<Text>Tente Mais Tarde!</Text>
 						</Flex>
 					) : (
 						<>
 							<Table colorScheme="whiteAlpha">
 								<Thead>
 									<Tr>
-										<Th px={["4", "6", "6"]} color="gray.300" width="8">
-											<Checkbox colorScheme="pink" />
-										</Th>
 										<Th>Usuário</Th>
 										{isWideVersion && <Th>Data de Cadastro</Th>}
 									</Tr>
 								</Thead>
 								<Tbody>
-									{data.users.map((user) => {
+									{data.users.map((user, index) => {
 										return (
-											<Tr key={user.id}>
-												<Td px={["4", "6", "6"]}>
-													<Checkbox colorScheme="pink" />
-												</Td>
+											<Tr key={index}>
 												<Td>
 													<Box>
-														<Link
-															color="purple.400"
-															onMouseEnter={() => handlePrefetchUser(user.id)}
-														>
+														<Link color="purple.400">
 															<Text fontWeight="bold">{user.name}</Text>
 														</Link>
 														<Text fontSize="sm" color="gray.300">
@@ -120,7 +111,7 @@ export default function UserList() {
 														</Text>
 													</Box>
 												</Td>
-												{isWideVersion && <Td>{user.createdAt}</Td>}
+												{isWideVersion && <Td>{user.password}</Td>}
 											</Tr>
 										);
 									})}
